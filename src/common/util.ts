@@ -31,7 +31,7 @@ export function resultAppend(source1: object, result: boolean, error?: any): obj
 }
 
 export function encrypt(text: string): Promise<string> {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const ENCRYPTION_KEY = Buffer.from(appConfig.getConfig.encryptKey, 'base64');
   if (!ENCRYPTION_KEY) {
@@ -45,7 +45,7 @@ export function encrypt(text: string): Promise<string> {
 }
 
 export function decrypt(text: string): Promise<string> {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const ENCRYPTION_KEY = Buffer.from(appConfig.getConfig.encryptKey, 'base64');
   if (!ENCRYPTION_KEY) {
@@ -55,7 +55,7 @@ export function decrypt(text: string): Promise<string> {
     return Promise.resolve(text);
   }
   const textParts = text.split(':');
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const iv = Buffer.from(textParts.shift(), 'hex');
   const encryptedText = Buffer.from(textParts.join(':'), 'hex');
@@ -68,7 +68,7 @@ export function decrypt(text: string): Promise<string> {
 export function formUrlEncoded(object: any): string {
   return Object.entries(object)
     .map(([key, value]) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
     })
@@ -118,7 +118,7 @@ export function convertSnakeToCamel(original: any): any {
   }
   const newObject: any = {};
   for (const i in original) {
-    if (original.hasOwnProperty(i)) {
+    if (Object.prototype.hasOwnProperty.call(original,i)) {
       newObject[snakeToCamel(i)] = original[i];
     }
   }

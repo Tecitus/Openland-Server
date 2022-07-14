@@ -101,7 +101,7 @@ export class AligoRest {
         userid: this.userid,
         token: this.token,
         senderkey: this.senderKey,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         tpl_code: datas[0].tplCode,
         sender: '010-9725-9398',
         failover: 'Y',

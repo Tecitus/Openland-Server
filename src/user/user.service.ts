@@ -5,9 +5,9 @@ import {SocialUser, socialUserToUser, User} from './user';
 import {appConfig} from '../app-config';
 import {decrypt, encrypt, isPresent} from '../common/util';
 import {UserRepository} from './user.repository';
-import {Teacher} from '../course/teacher';
+//import {Teacher} from '../course/teacher';
 import {email} from '../common/email/email';
-import {kakaoTalk} from '../common/kakao/kakaoTalk';
+//import {kakaoTalk} from '../common/kakao/kakaoTalk';
 import {commonService} from '../common/common.service';
 import {PoolConnection} from 'mysql2/promise';
 import * as bcrypt from 'bcrypt';
@@ -373,7 +373,7 @@ export class UserService {
         }
         return await this.userRepository.updateUser(user.id, cred, conn);
     }
-
+    /*
     public async getTeacherInfo(usr: User, res: Response, keep: boolean) {
         const teacherInfo: any = await this.userRepository.getCourseTeacherListByUserId(usr.id);
         if (!isPresent(teacherInfo) || teacherInfo.length < 1) {
@@ -392,7 +392,7 @@ export class UserService {
             },
             courseList: courses,
         };
-    }
+    }*/
 
     public async tokenCookieResult(usr: User | null, res: Response, keep: boolean) {
         if (!usr) {
@@ -454,7 +454,7 @@ export class UserService {
 
     async sendPhoneVerification(userId: string, phonenumber: string): Promise<void> {
         const verificationNumber: number = await commonService.createRandomNumber(userId);
-        await kakaoTalk.sendAlimtalkPhoneVerification(phonenumber, verificationNumber);
+        //await kakaoTalk.sendAlimtalkPhoneVerification(phonenumber, verificationNumber);
     }
 
     async socialProcess(res: Response, socialUser: SocialUser, customParams: any): Promise<void> {

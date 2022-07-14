@@ -1,6 +1,6 @@
 import { runSql, runTransSql } from '../common/db/database';
 import { isPresent } from '../common/util';
-import { nft } from './nft';
+import { Nft } from './nft';
 import {userService} from "../user/user.service";
 import {socialService} from "../user/social.service";
 import {UserController} from "../user/user.controller";

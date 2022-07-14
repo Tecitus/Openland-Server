@@ -5,4 +5,4 @@ export class Nft {
     private unit: number
 }
 
-
+export const nft = new Nft();

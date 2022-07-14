@@ -7,7 +7,7 @@ import {runSql} from "../common/db/database";
 const LIMIT_MINUTE = 5;
 
 export class CollectionRepository {
-    public async getCollectionId(name: string): Promise<String> {
+    public async getCollectionId(name: string): Promise<string> {
         try {
             const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
             const result: any = await runSql(query, name);

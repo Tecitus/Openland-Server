@@ -38,7 +38,7 @@ export interface MailConfig {
   password?: string;
 }
 
-export interface Federation {$
+export interface Federation {//$
   naver?: FederationItem;
   kakao?: FederationItem;
   facebook?: FederationItem;

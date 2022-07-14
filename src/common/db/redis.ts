@@ -52,7 +52,7 @@ class RedisHandler {
           resolve(true);
         }
       });
-    });a
+    });
   }
 
   del(key: string): Promise<void> {

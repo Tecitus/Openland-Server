@@ -34,7 +34,7 @@ class Database {
 
   public async runSql(connection: PoolConnection, query: string, values?: any): Promise<any> {
     if (values) {
-      try {$
+      try {//$
         const [results]: any = await connection.query(query, values);
         return await Promise.resolve(results);
       } catch (err) {

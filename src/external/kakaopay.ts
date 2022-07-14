@@ -28,22 +28,22 @@ export class Kakaopay {
       uri: this.getKakaopayUrl(['/v1/payment/ready']),
       body: formUrlEncoded({
         cid: this.cid,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         partner_order_id: orderId,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         partner_user_id: userId,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         item_name: classInfo.name,
         quantity: 1,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         total_amount: price,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         tax_free_amount: 0,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         approval_url: hostString + '/payment/kakaopayready?orderId=' + orderId + giftParam,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         cancel_url: hostString + `/class/${classInfo.id}/apply/${classInfo.optionId}`,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         fail_url: hostString + `/class/${classInfo.id}/apply/${classInfo.optionId}?kakaopay=fail`,
       }),
       headers: {
@@ -67,11 +67,11 @@ export class Kakaopay {
       body: formUrlEncoded({
         cid: this.cid,
         tid: orderInfo.kakaopayTid,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         partner_order_id: orderInfo.orderId,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         partner_user_id: orderInfo.userId,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         pg_token: pgToken,
       }),
       headers: {
@@ -102,9 +102,9 @@ export class Kakaopay {
       body: formUrlEncoded({
         cid: this.cid,
         tid: kakaopayTid,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         cancel_amount: price,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         cancel_tax_free_amount: 0,
       }),
       headers: {

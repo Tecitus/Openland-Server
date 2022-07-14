@@ -23,7 +23,7 @@ class CollectionController {
                 //useIsEditableQuery 이면 isEditable 판단 후 반환
 
                 const collectionId: string = await this.collectionService.getCollectionId(name);
-                let result = new Object({"collection": {"id": collectionId}});
+                const result = new Object({"collection": {"id": collectionId}});
 
                 if (reqQueryId == 'useIsEditableQuery') {
                     const userId = res.locals.user.id;
@@ -63,6 +63,7 @@ class CollectionController {
 
     }
 
-    export
-    const
-    collection = new CollectionController(collectionService)
+    //export
+    //const
+    //collection = new CollectionController(collectionService)
+}

@@ -6,7 +6,8 @@ import * as cookieParser from 'cookie-parser';
 import {appConfig} from './app-config';
 import {database} from './common/db/database';
 import {email} from './common/email/email';
-import * as multer from 'multer';
+//import * as multer from 'multer';
+import multer from 'multer';
 import {cronjob} from './external/cronjob';
 import * as winston from 'winston';
 import {routes} from './routes';
@@ -40,7 +41,7 @@ export class Server {
     }
 
     private middleware(): void {
-        this.app = express();
+        this.app = express.default();
         const corsOption = {
             origin: [
                 'https://www.sundaynamaste.com',
@@ -54,12 +55,12 @@ export class Server {
             ],
             methods: 'GET,PUT,PATCH,POST,OPTIONS',
         };
-        this.app.use(cors(corsOption));
+        this.app.use(cors.default(corsOption));
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
-        this.app.use(cookieParser());
-        this.app.use(helmet());
-        this.app.use(hpp());
+        this.app.use(cookieParser.default());
+        this.app.use(helmet.default());
+        this.app.use(hpp.default());
     }
 
     private dbConnect(): void {

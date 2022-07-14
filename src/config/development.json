@@ -1,0 +1,9 @@
+{
+    "db":{
+        "host": "localhost",
+        "user": "capstone",
+        "password": "capstone666666",
+        "database": "Capstone",
+        "port": "3306"
+    }
+}

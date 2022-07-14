@@ -107,7 +107,7 @@ export class BootpayRest {
 
     const options = {
       body: {
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         receipt_id: receiptId,
         name: name,
         reason: reason,

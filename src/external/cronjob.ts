@@ -1,11 +1,12 @@
 import * as cron from 'node-cron';
 import { runSql } from '../common/db/database';
-import { courseService } from '../course/course.service';
-import { adjustService } from '../adjust/adjust.service';
-import { pointService } from '../course/point.service';
+//import { courseService } from '../course/course.service';
+//import { adjustService } from '../adjust/adjust.service';
+//import { pointService } from '../course/point.service';
 import { aligo } from './aligo';
 
 export function cronjob(): void {
+  /*
   if (process.env.NODE_ENV === 'production') {
     cron.schedule('20 3,15 * * *', () => {
       runSql('DELETE FROM board_read_log;');
@@ -43,5 +44,5 @@ export function cronjob(): void {
     cron.schedule('0 22 * * *', () => {
       courseService.classOptionStatusBatch();
     });
-  }
+  }*/
 }

@@ -1,4 +1,4 @@
-import { nft } from './nft';
+import { Nft } from './nft';
 import * as requestPromise from 'request-promise-native';
 import { appConfig } from '../app-config';
 import { NftRepository } from './nft.repository';
@@ -19,11 +19,11 @@ export class NftService {
             const options = {
                 uri: 'https://graph.facebook.com/v7.0/oauth/access_token',
                 qs: {
-                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     client_id: CLIENT_ID,
-                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     redirect_uri: redirectUrl,
-                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     client_secret: SECRET_ID,
                     code,
                 },

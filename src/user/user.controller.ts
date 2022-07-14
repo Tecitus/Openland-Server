@@ -7,6 +7,7 @@ import {socialService, SocialService} from './social.service';
 import {commonService} from '../common/common.service';
 import * as querystring from 'querystring';
 import {appConfig} from '../app-config';
+import {json} from "../common/controller";
 
 export class UserController {
     constructor(
@@ -114,6 +115,7 @@ export class UserController {
         };
     }
 
+    /*
     public teacherlogin(): RequestHandler {
         return async (req: Request, res: Response) => {
             try {
@@ -135,6 +137,7 @@ export class UserController {
             }
         };
     }
+    */
 
     public logout(): RequestHandler {
         return (req: Request, res: Response) => {
@@ -172,6 +175,7 @@ export class UserController {
         };
     }
 
+    /*
     public teacherRefresh(): RequestHandler {
         return async (req: Request, res: Response) => {
             try {
@@ -199,6 +203,7 @@ export class UserController {
             }
         };
     }
+    */
 
     public sendEmailVerification(): RequestHandler {
         return async (req: Request, res: Response) => {
@@ -385,7 +390,7 @@ export class UserController {
             }
         };
     }
-
+    /*
     public checkClassId(): RequestHandler {
         return async (req: Request, res: Response, next: NextFunction) => {
             const classId = Number(req.params.id);
@@ -419,7 +424,7 @@ export class UserController {
                 json(res, resultAppend({}, false, `${err.message}`), 401);
             }
         };
-    }
+    }*/
 
     public checkMaster(): RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
@@ -543,7 +548,7 @@ export class UserController {
             }
         };
     }
-
+    /*
     public getGiftInfo(): RequestHandler {
         return async (req: Request, res: Response) => {
             try {
@@ -568,7 +573,7 @@ export class UserController {
                 json(res, resultAppend({}, false, `${err.message}`));
             }
         };
-    }
+    }*/
 }
 
-export const user = new UserController(userService, socialService, courseService);
+export const user = new UserController(userService, socialService);

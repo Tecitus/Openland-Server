@@ -15,5 +15,17 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "variable",
+            "modifiers": ["const"],
+            "format": ["camelCase", "UPPER_CASE"]
+          },
+          {
+            "selector": "variableLike",
+            "format": ["camelCase"]
+          }
+        ]
     }
 }
