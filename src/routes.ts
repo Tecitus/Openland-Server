@@ -18,6 +18,8 @@ export function routes(app: express.Application) {
 
   router.post('/users', user.create());
   router.post('/users/:id', protect, user.update());
+  router.get('/users/:address/nonce', metamask.getNonce());
+  router.get('/users/:address/signature', metamask.joinOrLogin());
   router.post('/auth/login', user.login());
   //router.post('/auth/teacherlogin', user.teacherlogin());
   router.post('/auth/logout', user.logout());

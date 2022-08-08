@@ -7,7 +7,7 @@ import * as querystring from 'querystring';
 import {appConfig} from '../app-config';
 import {Metamask} from "./metamask";
 import {json} from "../common/controller";
-
+//https://blog.devgenius.io/authenticating-users-to-your-web-app-using-metamask-and-nodejs-e920e45e358 참조
 export class MetamaskController {
     constructor(
         private metamaskService: MetamaskService
@@ -23,6 +23,7 @@ export class MetamaskController {
                 const usr = await this.metamaskService.checkUserExist(reqData.address)
                 let id: number;
                 if (usr) {
+                    //TODO : 로그인 성공한 경우 nonce 값 Math.floor(Math.random() * 1000000) 로 갱신
                     id = await this.metamaskService.userLogin(reqData)
                 } else {
                     await this.metamaskService.userCreate(reqData)
@@ -33,6 +34,24 @@ export class MetamaskController {
             } catch
                 (err) {
                 json(res, resultAppend({}, false, `${err.message}`), 400);
+            }
+        }
+    }
+
+    
+    public getNonce() {
+        return async (req: Request, res: Response) => {
+            try
+            {
+                if(!(req.params.address in app.data.users)) //등록된 Address가 없는 경우 생성
+                {
+                    //app.data.users[req.params.wallet_address] = Math.floor(Math.random() * 1000000); // new nonce
+                }
+                await res.send(`Nonce: ${app.data.users[req.params.wallet_address]}`);
+            }
+            catch (err)
+            {
+
             }
         }
     }

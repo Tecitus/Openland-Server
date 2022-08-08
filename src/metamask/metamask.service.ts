@@ -23,7 +23,8 @@ export class MetamaskService {
         try {
             const cred = Object.assign({},
                 {address: metamask.address},
-                {wallet: metamask.wallet});
+                {wallet: metamask.wallet}, // TODO : web3.eth.getBalance 함수로 직접 데이터 가져오기
+                {nonce: Math.floor(Math.random() * 1000000)});
             return await this.metamaskRepository.userCreate(cred);
         } catch (err) {
             return await Promise.reject(err.message);
@@ -34,7 +35,6 @@ export class MetamaskService {
         try {
             return await this.metamaskRepository.userLogin(address, new Date().toISOString());
             //FIXME : check 후 자동으로 updateAt 업뎃해주는 기능 몽고디비 찾으면 lastLogin 지우기
-
         } catch (err) {
             return await Promise.reject(err.message);
         }
