@@ -4,6 +4,8 @@ import { InstaController } from './insta/insta.controller';
 import { InstaService } from './insta/insta.service'
 import { nftController } from './nft/nft.controller'
 import { metamask } from './metamask/metamask.controller'
+import { fileStorageService } from './common/filestorage.service';
+import { assetController} from './asset/asset.controller';
 
 
 export function routes(app: express.Application) {
@@ -16,10 +18,12 @@ export function routes(app: express.Application) {
   const versionProtect = [user.checkVersion()];
   const insta = new InstaController(new InstaService());
 
+
   router.post('/users', user.create());
   router.post('/users/:id', protect, user.update());
   router.get('/users/:address/nonce', metamask.getNonce());
   router.get('/users/:address/signature', metamask.joinOrLogin());
+  router.post('/assets/createasset', fileStorageService.uploader.single('attachment'), assetController.createNewAsset())
   router.post('/auth/login', user.login());
   //router.post('/auth/teacherlogin', user.teacherlogin());
   router.post('/auth/logout', user.logout());

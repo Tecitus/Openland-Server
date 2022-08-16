@@ -28,6 +28,8 @@
     "git": "^0.1.5",
     "helmet": "^3.21.2",
     "hpp": "^0.2.2",
+    "ipfs-core": "^0.15.4",
+    "ipfs-http-client": "^57.0.3",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.20",
     "mime-types": "^2.1.20",

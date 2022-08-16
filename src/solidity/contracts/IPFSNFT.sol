@@ -37,12 +37,14 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
     SaleStruct[] minted;
 
     constructor(
-        string memory _name,
-        string memory _symbol,
-        string memory _dataURI
+        string memory _name, // 최대 64자
+        string memory _symbol, //보통 3~4자리 대문자
+        string memory _dataURI,
+        uint8 _maxSupply
     ) ERC721(_name, _symbol) {
         supply = totalSupply();
         dataURI = _dataURI;
+        maxSupply = _maxSupply;
     }
 
     function payToMint() public payable {

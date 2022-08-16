@@ -3,7 +3,8 @@ type ProviderType = 'metamask' | 'kaikas'
 export class Metamask {
 
     private _address: string;
-    private _wallet: number; //보유한 코인?
+    //private _wallet:string;//보유한 코인?
+    private _balance: number;
     private _id: string;
     private _nonce: number;
     //address 가 어디건지 백엔드 단에서 확인한번더 하던가..? 가 아니라 애초에 백엔드에서 해야할emt
@@ -16,12 +17,12 @@ export class Metamask {
         this._address = value;
     }
 
-    get wallet(): number {
-        return this._wallet;
+    get balnace(): number {
+        return this._balance;
     }
 
-    set wallet(value: number) {
-        this._wallet = value;
+    set balnace(value: number) {
+        this._balance = value;
     }
 
     get id(): string {

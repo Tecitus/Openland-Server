@@ -7,12 +7,13 @@ import {appConfig} from './app-config';
 import {database} from './common/db/database';
 import {email} from './common/email/email';
 //import * as multer from 'multer';
-import multer from 'multer';
+//import multer from 'multer';
 import {cronjob} from './external/cronjob';
 import * as winston from 'winston';
 import {routes} from './routes';
 import {redis} from './common/db/redis';
 
+/*
 const fileStorage = multer.diskStorage({
     destination: (req, nfile, cb) => {
         cb(null, '/home/public/collection_temp');
@@ -25,7 +26,7 @@ const fileStorage = multer.diskStorage({
 export const uploadConfig = multer({
     storage: fileStorage,
 });
-
+*/
 export class Server {
     public app: express.Application;
 

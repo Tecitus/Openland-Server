@@ -5,6 +5,7 @@ import {MetamaskRepository} from './metamaskRepository';
 import {nanoid} from 'nanoid/non-secure';
 import {UserRepository} from "../user/user.repository";
 import {UserService} from "../user/user.service";
+import {web3} from "../solidity/Web3Service";
 
 export class MetamaskService {
     constructor(private metamaskRepository: MetamaskRepository) {
@@ -23,7 +24,7 @@ export class MetamaskService {
         try {
             const cred = Object.assign({},
                 {address: metamask.address},
-                {wallet: metamask.wallet}, // TODO : web3.eth.getBalance 함수로 직접 데이터 가져오기
+                {balance: this.getBalance(metamask)},
                 {nonce: Math.floor(Math.random() * 1000000)});
             return await this.metamaskRepository.userCreate(cred);
         } catch (err) {
@@ -43,6 +44,18 @@ export class MetamaskService {
     public async deleteUser(metamask: Metamask): Promise<string> {
         try {
             //TODO : 지갑주소를 삭제 ㄴㄴ metamask 서버에 있는지 확인
+        } catch (err) {
+            return await Promise.reject(err.message);
+        }
+    }
+
+
+    //지갑의 보유 코인 확인
+    public async getBalance(metamask: Metamask): Promise<string>
+    {
+        try {
+            const wei = await web3.eth.getBalance(metamask.address);//wei 단위로 반환
+            return web3.utils.fromWei(wei) // wei를 eth 단위로 변환하는 함수
         } catch (err) {
             return await Promise.reject(err.message);
         }

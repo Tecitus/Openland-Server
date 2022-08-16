@@ -21,6 +21,14 @@ export class CollectionService {
         }
     }
 
+    public async getCollectionInfo(id: Number): Promise<string> {
+        try {
+            return await this.collectionRepository.getCollectionInfo(id);
+        } catch (err) {
+            return await Promise.reject(err.message);
+        }
+    }
+
     public async checkUsrEditAuth(userId: string, collectionId: string): Promise<boolean> {
         try {
             return await this.collectionRepository.checkUsrEditAuth(userId, collectionId);

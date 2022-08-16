@@ -17,6 +17,16 @@ export class CollectionRepository {
         }
     }
 
+    public async getCollectionInfo(name: Number): Promise<string> {
+        try {
+            const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
+            const result: any = await runSql(query, name);
+            return await Promise.resolve(result);
+        } catch (err) {
+            return Promise.reject(new Error(err));
+        }
+    }
+
     public async checkUsrEditAuth(userId: string, collectionId: string): Promise<boolean> {
         try {
             const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';

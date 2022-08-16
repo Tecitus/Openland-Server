@@ -63,12 +63,12 @@ let IPFSNFTContract = {
 
 export class SolidityService
 {
-  public contracts : {[name:string]: {[name:string]:Function | Promise<Contract>}};
+  public contracts : {[name:string]: {[name:string]:Function}};
   constructor(
 
   )
   {
-    this.contracts["IFPSNFT"] = IPFSNFTContract;
+    this.contracts["IPFSNFT"] = IPFSNFTContract;
   }
 }
 
