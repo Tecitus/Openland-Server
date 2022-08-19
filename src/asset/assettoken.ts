@@ -1,6 +1,8 @@
+import {User} from "../user/user";
+
 export class AssetToken
 {
-    public owner: string;
-    public ownerid: number;
-    public index: number;
+    public owneraddress: string; // 토큰을 소유한 지갑 주소
+    public ownerid: User | Number; 
+    public index: Number;
 }

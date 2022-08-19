@@ -56,9 +56,15 @@ function getIPFSNFTContract(address: string)
   return IPFSNFTContract;
 }
 
+function getIPFSHash(contract: Contract)
+{
+  return contract.methods._dataURI().call();
+}
+
 let IPFSNFTContract = {
   makeNewContractAsync : makeNewIPFSNFTContractAsync,
-  getContract : getIPFSNFTContract
+  getContract : getIPFSNFTContract,
+  getIPFSHash : getIPFSHash
 }
 
 export class SolidityService

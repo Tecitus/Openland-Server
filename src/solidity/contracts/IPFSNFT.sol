@@ -8,12 +8,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract IPFSNFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
-    mapping(string => uint8) public existingURIs;
+    //mapping(string => uint8) public existingURIs;
     uint256 public cost = 0.01 ether;
     uint256 public maxSupply = 100;
     uint256 public supply;
-    string public baseURI = "ipfs://"; // ipfs
-    string public dataURI;
+    string public baseURI = "https://ipfs.io/ipfs/"; // ipfs://
+    string public dataURI; // ipfs의 해시
     //string public title;
 
     event Sale(
@@ -39,11 +39,11 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
     constructor(
         string memory _name, // 최대 64자
         string memory _symbol, //보통 3~4자리 대문자
-        string memory _dataURI,
+        string memory _datauRI,
         uint8 _maxSupply
     ) ERC721(_name, _symbol) {
         supply = totalSupply();
-        dataURI = _dataURI;
+        dataURI = _datauRI;
         maxSupply = _maxSupply;
     }
 
@@ -71,6 +71,15 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
         emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply), block.timestamp);
     }
 
+    //maxSupply 만큼 토큰 민팅
+    function mintAll() public payable
+    {
+        for(uint i = supply; i < maxSupply; i++)
+        {
+            payToMint();
+        }
+    }
+
     function getAllNFTs() public view returns (SaleStruct[] memory) {
         return minted;
     }
@@ -92,9 +101,13 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
         return baseURI;
     }
 
+    function _dataURI() internal view virtual returns (string memory) {
+        return dataURI;
+    }
+
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         _requireMinted(tokenId);
 
-        return string(abi.encodePacked(_baseURI(), dataURI));
+        return string(abi.encodePacked(_baseURI(), _dataURI()));
     }
 }

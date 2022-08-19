@@ -41,6 +41,7 @@ export class AssetController
                 const filepath = req.file.path;
                 const filebuffer = req.file.buffer;
                 const aco = new AssetCreationOption(req.params.name, req.params.symbol, req.params.description, undefined, Number(req.params.tokennumber), filebuffer)
+                const asset = await assetService.createNewAsset(aco);
                 return;
             }
             catch(err)

@@ -8,4 +8,5 @@ export class Asset {
     public creator: User | Number;
     public ipfshash: string;
     public assetTokens: AssetToken[];
+    public address:string; // 에셋의 컨트랙트 주소
 }
