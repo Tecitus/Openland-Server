@@ -26,6 +26,7 @@ module.exports = {
             "selector": "variableLike",
             "format": ["camelCase"]
           }
-        ]
+        ],
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }

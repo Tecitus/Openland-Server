@@ -1,6 +1,7 @@
 export interface Config {
   version?: string;
   db?: DbConfig;
+  web3? : Web3Config;
   redis?: RedisConfig;
   mail?: MailConfig;
   apiUrl?: string;
@@ -11,6 +12,8 @@ export interface Config {
   bootpay?: Bootpay;
   kakaopay?: Kakaopay;
   aligo?: Aligo;
+  ipfs?: IPFSConfig;
+  server?: ServerConfig;
 }
 
 export interface DbConfig {
@@ -19,11 +22,31 @@ export interface DbConfig {
   user?: string;
   password?: string;
   database?: string;
+  migration?:boolean;
 }
 
-export class RedisConfig {
+export interface ServerConfig {
+  cors?: string[];
+}
+
+export interface RedisConfig {
   host?: string;
   port?: number;
+  secret? : string;
+  database? : string;
+}
+
+export interface IPFSConfig{
+  endpoint? : string;
+  projectid? : string;
+  projectsecret? : string;
+}
+
+export interface Web3Config
+{
+  url?:string;
+  address?:string;
+  privatekey?:string;
 }
 
 export class JwtConfig {

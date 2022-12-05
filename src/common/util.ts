@@ -3,8 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { endOfDay, format } from 'date-fns';
 import { appConfig } from '../app-config';
+import {SHA3} from 'sha3';
 
 const IV_LENGTH = 16;
+const sha3Object = new SHA3(512);
 
 export function isPresent(value: any): boolean {
   return !(value === undefined || value === null || value === '' || value === 'NaN');
@@ -181,3 +183,10 @@ export function sqlMulitipleRow(data: any[]): any {
  * http://expressjs.com/ko/advanced/best-practice-performance.html#section-10 을 참고하면 좋다.
  */
 export const wrap = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
+
+export function sha3Hash(data: string) : string
+{
+  const result = sha3Object.update(data).digest('hex');
+  sha3Object.reset();
+  return result;
+}

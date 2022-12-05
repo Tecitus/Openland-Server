@@ -4,13 +4,14 @@ import { RedisConfig } from '../config';
 import { isPresent } from '../util';
 
 class RedisHandler {
-  private redisClient: RedisClient;
+  public redisClient: RedisClient;
 
   connection(redisConfig: RedisConfig) {
     try {
       this.redisClient = createClient({
         port: redisConfig.port,
         host: redisConfig.host,
+        db: redisConfig.database
       });
       this.redisClient
         .on('error', (error: any) => {

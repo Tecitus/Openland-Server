@@ -1,15 +1,21 @@
 import * as express from 'express';
 import { user } from './user/user.controller';
 import { InstaController } from './insta/insta.controller';
+import { collectionController } from './collection/collection.controller';
 import { InstaService } from './insta/insta.service'
 import { nftController } from './nft/nft.controller'
 import { metamask } from './metamask/metamask.controller'
 import { fileStorageService } from './common/filestorage.service';
+import {fileStorageController} from './common/filestorage.controller'
+import { ipfsController } from './common/ipfs.controller';
 import { assetController} from './asset/asset.controller';
+import bodyParser from 'body-parser';
+let jsonparser = bodyParser.json();
 
 
 export function routes(app: express.Application) {
   const router: express.Router = express.Router();
+  /*
   const bothLoginOrNot = user.authCheck();
   const protect = user.authGuard();
   const teacherProtect = [user.authGuard(), user.getLevel()];
@@ -17,38 +23,55 @@ export function routes(app: express.Application) {
   const OnlyMasterProtect = [user.authGuard(), user.getLevel(), user.checkMaster()];
   const versionProtect = [user.checkVersion()];
   const insta = new InstaController(new InstaService());
+  */
 
+  router.post('/users/register', fileStorageService.uploader.single('attachment'),user.registerUser());
+  router.post('/users/signin',user.signIn());
+  router.get('/users/user/:id',user.getUserData());
+  router.get('/users/getprofiledata/:id', user.getProfileData());
+  router.post('/users/session',user.getSessionData());
+  router.post('/users/logout',user.logout());
 
-  router.post('/users', user.create());
-  router.post('/users/:id', protect, user.update());
-  router.get('/users/:address/nonce', metamask.getNonce());
-  router.get('/users/:address/signature', metamask.joinOrLogin());
-  router.post('/assets/createasset', fileStorageService.uploader.single('attachment'), assetController.createNewAsset())
-  router.post('/auth/login', user.login());
-  //router.post('/auth/teacherlogin', user.teacherlogin());
-  router.post('/auth/logout', user.logout());
-  router.post('/auth/refresh', protect, user.refresh());
-  router.post('/auth/refreshCall', protect, user.refreshCall());
-  //router.post('/auth/teacherRefresh', teacherProtect, user.teacherRefresh());
-  router.post('/auth/verification/email/confirm', user.confirmEmailVerification());
-  router.get('/auth/verification/email', protect, user.sendEmailVerification());
-  router.post('/auth/verification/phone/confirm', protect, user.confirmPhoneVerification());
-  router.post('/auth/verification/phone', protect, user.sendPhoneVerification());
-  router.post('/auth/forgotpassword', user.forgotpassword());
-  router.post('/auth/resetpassword', user.authGuardForPassword(), user.resetPassword());
-  router.post('/auth/updatepassword', user.authGuardForUpdatePassword(), user.resetPassword());
-  router.get('/auth/callback/facebook', user.facebookLogin());
-  router.get('/auth/callback/kakao', user.kakaoLogin());
-  router.get('/auth/callback/naver', user.naverLogin());
-  router.post('/snsusers', protect, user.snsTerm());
-  //router.get('/auth/gift/:id', user.getGiftInfo());
-  //router.post('/auth/gift', protect, user.setGift());
+  router.post('/collections/createcollection', fileStorageService.uploader.fields([{name:"logoimage"}, {name:"featuredimage"},{name:"bannerimage"}]), collectionController.createCollection())
+  router.get('/collections/collection/:id', collectionController.getCollectionInfo());
+  router.get('/collections/mycollections', collectionController.getMyCollectionLists());
+  router.get('/collections/countassets/:collectionid', collectionController.countAssets());
+  router.get('/collections/getrandom/:amount', collectionController.getRandomCollections());
+  router.get('/collections/assets/:collectionid', collectionController.getAssetsByCollectionId());
+  router.get('/collections/findcollections', collectionController.findCollections());
+  router.get('/collections/getactivities', collectionController.getActivitiesByCollection());
+  router.get('/collections/getadditionalinfo/:collectionid', collectionController.getAdditionalInfo());
 
-  router.get('/insta/getImages', insta.getImages());
-  router.get('/insta/getToken', insta.getToken());
-  // router.get('/auth/login/verification/getToken', insta.getToken());
+  router.get('/metamasks/nonce/:address', metamask.getNonce());
+  router.get('/metamasks/metamask/:address', metamask.getMetamaskData());
+  router.post('/metamasks/signature', metamask.joinOrLogin());
 
-  //router.get('/homeList', nftController.getHomeList());
+  router.post('/assets/createasset', fileStorageService.uploader.single('image'), assetController.createNewAsset())
+  router.get('/assets/asset/:id', assetController.getAssetData());
+  router.get('/assets/getrandomassets/:amount', assetController.getRandomAssetDatas());
+  router.get('/assets/assetoken/:assetid/:index', assetController.getAssetToken());
+  router.get('/assets/getlistact', assetController.getListActivities());
+  router.get('/assets/getofferact', assetController.getOfferActivities());
+  router.get('/assets/getprofileassetdata', assetController.getProfileAssetData());
+  router.get('/assets/getfavoritesbyuserid', assetController.getFavoritesByUserId());
+  router.get('/assets/createfavorite/:assetid', assetController.createFavorite());
+  router.get('/assets/findassets', assetController.findAssets());
 
+  router.get('/ipfs/:hash', ipfsController.getIFPSFile());
+  router.get('/files/:file', fileStorageController.getFile());
+
+  router.get("/activities/getactivitiesfromasset", assetController.getActivitiesFromAsset());
+  router.get("/activities/getactivities", assetController.getActivities());
+  router.get('/activities/getlistact', assetController.getListActivities());
+  router.get('/activities/getofferact', assetController.getOfferActivities());
+  router.post('/activities/acceptlist', assetController.acceptListing());
+  router.post('/activities/acceptoffer', assetController.acceptOffer());
+  router.post('/activities/createlist', assetController.createList());
+  router.post('/activities/createoffer', assetController.createOffer());
+  router.post('/activities/transfernft', assetController.transferNFT());
+  router.get('/activities/getownedtokensbyasset/:assetid', assetController.getOwnedTokensByAsset())
+
+  router.get("/watches/add/:collectionid", collectionController.addWatch());
+  router.get("/watches/getdata", collectionController.getWatches());
   app.use(router);
 }

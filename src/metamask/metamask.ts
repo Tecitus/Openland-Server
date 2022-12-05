@@ -2,6 +2,7 @@ type ProviderType = 'metamask' | 'kaikas'
 
 export class Metamask {
 
+    /*
     private _address: string;
     //private _wallet:string;//보유한 코인?
     private _balance: number;
@@ -39,5 +40,8 @@ export class Metamask {
 
     set nonce(value: number){
         this._nonce = value;
-    }
+    }*/
+
+    public address? : string;
+    public userid?: number;
 }

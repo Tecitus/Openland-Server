@@ -2,7 +2,7 @@
 //TODO : collection
 import {nanoid} from 'nanoid';
 import {User} from '../user/user';
-import {collectionService, CollectionService} from './Collection.Service';
+import {collectionService, CollectionService} from './collection.service';
 import {Request, Response} from "express";
 import {json} from "../common/controller";
 import {necessary, resultAppend} from "../common/util";
@@ -15,55 +15,160 @@ class CollectionController {
     constructor(private collectionService: CollectionService) {
     }
 
-    public async getCollectionInfo() {
+    public getCollectionInfo() {
         return async (req: Request, res: Response) => {
             try {
-                const name: string = req.body.variables.collection;
-                const reqQueryId: string = req.body.id;
-                //useIsEditableQuery 이면 isEditable 판단 후 반환
+                const collectionid = Number(req.params.id);
+                res.send(await this.collectionService.getCollectionInfo(collectionid));
+                return;
+            } catch (err) {
+                json(res, resultAppend({}, false, `${err.message}`), 400);
+            }
+        }
+    }
 
-                const collectionId: string = await this.collectionService.getCollectionId(name);
-                const result = new Object({"collection": {"id": collectionId}});
+    public getMyCollectionLists()
+    {
+        return async (req: Request, res: Response) => {
+            try {
+                //@ts-ignore
+                const userid = req.session.user.id;
+                res.send(await this.collectionService.findCollectionData({creator: userid}));
+                return;
+            } catch (err) {
+                json(res, resultAppend({}, false, `${err.message}`), 400);
+            }
+        }
+    }
 
-                if (reqQueryId == 'useIsEditableQuery') {
-                    const userId = res.locals.user.id;
-                    const isEditable: boolean = await this.collectionService.checkUsrEditAuth(userId, collectionId);
-                    Object.assign(result, {"isEditable": isEditable})
+    public getRandomCollections()
+    {
+        return async (req: Request, res: Response) => {
+            try {
+                //@ts-ignore
+                const amount = Number(req.params.amount);
+                const offset = Number(req.query.offset)
+                res.send(await this.collectionService.getRandomCollections(amount, offset));
+                return;
+            } catch (err) {
+                json(res, resultAppend({}, false, `${err.message}`), 400);
+            }
+        }
+    }
+
+    public createCollection() {
+        return async (req: Request, res: Response) => {
+            try {
+                //@ts-ignore
+                if(req.session.user == undefined) {
+                    res.send("Should be signed in.");
+                    return;
                 }
+                const name = req.body.name;
+                const description = req.body.description;
+                //const symbol = req.body.symbol;
+                //@ts-ignore
+                const creatorid = req.session.user.id;
+                //@ts-ignore
+                const bannerImg = req.files.bannerimage[0].filename;
+                //@ts-ignore
+                const logoImg = req.files.logoimage[0].filename;
+                //@ts-ignore
+                const featuredImg = req.files.featuredimage[0].filename;
 
-                return json(res, resultAppend(result, true));
+                await this.collectionService.createCollection({
+                    name: name,
+                    description: description,
+                    //symbol: symbol,
+                    creator: creatorid,
+                    bannerimg: bannerImg,
+                    featuredimg: featuredImg,
+                    logoimg : logoImg,
+                });
+
+                res.send("Success");
             } catch (err) {
                 json(res, resultAppend({}, false, `${err.message}`), 400);
             }
         }
+
+
     }
 
-    public async createCollection() {
-        return async (req: Request, res: Response) => {
-            const conn: PoolConnection = await startTraction();
-            try {
-                const user: User = res.locals.user;
-                const data: string = req.body;
-                const threadId = Number(req.params.id);
-                await necessary(String(threadId));
-                const val = req.body;
-                await this.colletionService.postCreate(user, threadId, val, conn);
-                const list = await this.collectionService.getDetailById(threadId);
-                await commitConn(conn);
-                const arranged = Object.assign({}, {thread: list});
-                const result = resultAppend(arranged, true);
-                json(res, result);
-            } catch (err) {
-                await conn.rollback();
-                conn.release();
-                json(res, resultAppend({}, false, `${err.message}`), 400);
+    public addWatch()
+    {
+        return async (req: Request, res: Response)=> {
+            //@ts-ignore
+            if(req.session.user == undefined) {
+                res.send("Should be signed in.");
+                return;
             }
+
+            const collectionid = Number(req.params.collectionid);
+            //@ts-ignore
+            await collectionService.createWatchData(req.session.user.id, collectionid);
+
+            res.send("Success");
         }
-
-
     }
 
-    //export
-    //const
-    //collection = new CollectionController(collectionService)
+    public getWatches()
+    {
+        return async (req: Request, res: Response)=> {
+            //@ts-ignore
+            if(req.session.user == undefined) {
+                res.send("Should be signed in.");
+                return;
+            }
+            //@ts-ignore
+            res.send(await collectionService.getWatchData(req.session.user.id));
+        }
+    }
+
+    public countAssets()
+    {
+        return async (req: Request, res: Response)=> {
+            const collectionid = Number(req.params.collectionid);
+            res.send(await collectionService.countAssets(collectionid));
+        }
+    }
+
+    public getAdditionalInfo()
+    {
+        return async (req: Request, res: Response)=> {
+            const collectionid = Number(req.params.collectionid);
+            const assets = await collectionService.countAssets(collectionid);
+            const owners = await collectionService.countOwners(collectionid);
+            const volumes = await collectionService.countVolumes(collectionid);
+            res.send({assets, owners, volumes});
+        }
+    }
+
+    public getAssetsByCollectionId()
+    {
+        return async (req: Request, res:Response) =>
+        {
+            const collectionid = Number(req.params.collectionid)
+            res.send(await collectionService.getAssetsByCollectionId(collectionid));
+        }
+    }
+
+    public findCollections()
+    {
+        return async (req: Request, res: Response) =>
+        {
+            res.send(await collectionService.findCollectionData(req.query));
+        }
+    }
+    public getActivitiesByCollection()
+    {
+        return async (req: Request, res: Response) =>
+        {
+            const collectionid = Number(req.query.collectionid);
+            const offset = Number(req.query.offset)
+            res.send(await collectionService.getActivitiesByCollection(collectionid, offset));
+        }
+    }
 }
+
+export const collectionController = new CollectionController(collectionService);

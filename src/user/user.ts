@@ -1,6 +1,7 @@
 type ProviderType = 'kakao' | 'naver' | 'facebook';
 
 export class User {
+  /*
   // tslint:disable:variable-name
   private _id: number;
   private _email: string;
@@ -204,8 +205,17 @@ export class SocialUser {
   set picture(value: string) {
     this._picture = value;
   }
+  */
+ public id?:number;
+ public email?:string;
+ public password?:string;
+ public salt?:string;
+ public nickname?:string;
+ public username?:string;
+ //public phone:string;
+ public picture?:string;
 }
-
+/*
 export function socialUserToUser(sUser: SocialUser): User {
   const nUser = new User();
   nUser.id = sUser.userId;
@@ -218,3 +228,4 @@ export function socialUserToUser(sUser: SocialUser): User {
   nUser.providerId = sUser.providerId;
   return nUser;
 }
+*/

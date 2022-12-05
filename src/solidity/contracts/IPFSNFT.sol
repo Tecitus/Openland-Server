@@ -9,7 +9,7 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     //mapping(string => uint8) public existingURIs;
-    uint256 public cost = 0.01 ether;
+    uint256 public cost = 0.000001 ether;
     uint256 public maxSupply = 100;
     uint256 public supply;
     string public baseURI = "https://ipfs.io/ipfs/"; // ipfs://
@@ -25,6 +25,7 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
         uint256 timestamp
     );
 
+/*
     struct SaleStruct {
         uint256 id;
         address from;
@@ -33,8 +34,8 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
         string title;
         uint256 timestamp;
     }
-
-    SaleStruct[] minted;
+*/
+    //SaleStruct[] minted;
 
     constructor(
         string memory _name, // 최대 64자
@@ -47,15 +48,15 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
         maxSupply = _maxSupply;
     }
 
-    function payToMint() public payable {
+    function payToMint(address marketaddress) public payable {
         require(supply <= maxSupply, "Sorry, all NFTs have been minted!");
         require(msg.value > 0 ether, "Ether too low for minting!");
-        require(msg.sender != owner(), "This is not permitted!");
+        //require(msg.sender != owner(), "This is not permitted!");
 
         supply += 1;
 
-        sendMoneyTo(owner(), msg.value);
-
+        //sendMoneyTo(owner(), msg.value);
+/*
         minted.push(
             SaleStruct(
                 supply,
@@ -66,34 +67,37 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
                 block.timestamp
             )
         );
-
+*/
         _safeMint(msg.sender, supply);
-        emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply), block.timestamp);
+        approve(marketaddress, supply);
+        emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply),block.timestamp);
+        //emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply),block.timestamp);
     }
 
     //maxSupply 만큼 토큰 민팅
-    function mintAll() public payable
-    {
-        for(uint i = supply; i < maxSupply; i++)
-        {
-            payToMint();
-        }
-    }
-
-    function getAllNFTs() public view returns (SaleStruct[] memory) {
-        return minted;
-    }
     
-    function getAnNFTs(uint256 tokenId) public view returns (SaleStruct memory) {
-        return minted[tokenId - 1];
-    }
+    //function mintAll() public payable
+    //{
+    //    for(uint i = supply; i < maxSupply; i++)
+    //    {
+    //        /*payToMint();*/
+    //    }
+    //}
+
+    //function getAllNFTs() public view returns (SaleStruct[] memory) {
+    //    return minted;
+    //}
+    
+    //function getAnNFTs(uint256 tokenId) public view returns (SaleStruct memory) {
+    //    return minted[tokenId - 1];
+    //}
 
     function concat(string memory str) internal view returns (string memory) {
         return string(abi.encodePacked(baseURI, "", str));
     }
 
-    function sendMoneyTo(address to, uint256 amount) internal {
-        (bool success1, ) = payable(to).call{value: amount}("");
+    function sendMoneyTo(address payable to, uint256 amount) internal {
+        (bool success1, ) = to.call{value: amount}("");
         require(success1);
     }
 

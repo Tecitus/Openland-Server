@@ -1,4 +1,4 @@
-import {SocialUser} from './user';
+//import {SocialUser} from './user';
 import * as requestPromise from 'request-promise-native';
 import {appConfig} from '../app-config';
 import {UserRepository} from './user.repository';
@@ -8,6 +8,7 @@ export class SocialService {
     constructor(private userRepository: UserRepository) {
     }
 
+    /*
     public async facebookGetAccessToken(code: any): Promise<string> {
         try {
             const CLIENT_ID = appConfig.getConfig.federations!.facebook!.client_id;
@@ -201,6 +202,7 @@ export class SocialService {
         kakaoUser.type = 'kakao';
         return Promise.resolve(kakaoUser);
     }
+    */
 }
 
 export const socialService = new SocialService(new UserRepository());
