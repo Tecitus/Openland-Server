@@ -11,7 +11,7 @@ const sha3Object = new SHA3(512);
 export function isPresent(value: any): boolean {
   return !(value === undefined || value === null || value === '' || value === 'NaN');
 }
-
+/*
 export function isEmptyObject(obj: any): boolean {
   return Object.keys(obj).length === 0;
 }
@@ -23,7 +23,7 @@ export function isNotEmptyObject(obj: any): boolean {
 export function ensureString(value: any): string {
   return typeof value === 'string' ? value : '';
 }
-
+*/
 export function resultAppend(source1: object, result: boolean, error?: any): object {
   let resultObj = Object.assign({}, source1, { success: result });
   if (error) {
@@ -31,7 +31,7 @@ export function resultAppend(source1: object, result: boolean, error?: any): obj
   }
   return resultObj;
 }
-
+/*
 export function encrypt(text: string): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -151,7 +151,7 @@ export function endDay(day: Date) {
 export function removeEmoji(targetText: string) {
   return targetText.replace(/[^a-zA-Z0-9 \u3130-\u318F\uAC00-\uD7AF]+/g, '');
 }
-
+*/
 export function randomString() {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -160,7 +160,7 @@ export function randomString() {
   }
   return text;
 }
-
+/*
 export function sqlMulitipleRow(data: any[]): any {
   let questionMarks = '';
   const values: any[] = [];
@@ -176,7 +176,7 @@ export function sqlMulitipleRow(data: any[]): any {
   questionMarks = questionMarks.substr(0, questionMarks.length - 2);
   return { questionMarks, values };
 }
-
+*/
 /**
  * 에러 처리를 좀더 쉽게 하기 위해서 한번 감싸준다.
  * es7에 제안된 async await를 사용하여 에러처리시 catch가 되기 편하게 해준 방식이다.

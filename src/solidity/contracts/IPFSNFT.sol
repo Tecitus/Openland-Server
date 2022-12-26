@@ -16,81 +16,131 @@ contract IPFSNFT is ERC721Enumerable, Ownable {
     string public dataURI; // ipfs의 해시
     //string public title;
 
+    struct Offer
+    {
+        uint256 cost;
+        uint8 amount;
+    }
+
+    mapping(uint8 => uint256) listing;
+    mapping(address => Offer) offers;
+
     event Sale(
         uint256 id,
         address indexed from,
         address indexed to,
         uint256 cost,
         string metadataURI,
-        uint256 timestamp
+        uint256 timestamp,
+        uint8 stype,
+        uint8 amount
     );
 
-/*
-    struct SaleStruct {
-        uint256 id;
-        address from;
-        address to;
-        uint256 cost;
-        string title;
-        uint256 timestamp;
-    }
-*/
-    //SaleStruct[] minted;
+    event ListAccepted(
+        uint256 id,
+        address indexed from,
+        address indexed to,
+        uint256 cost
+    );
+
+    event OfferAccepted(
+        uint256 id,
+        address indexed from,
+        address indexed to,
+        uint256 cost
+    );
+
 
     constructor(
         string memory _name, // 최대 64자
         string memory _symbol, //보통 3~4자리 대문자
         string memory _datauRI,
-        uint8 _maxSupply
+        uint8 _maxSupply,
+        address marketaddress
     ) ERC721(_name, _symbol) {
         supply = totalSupply();
         dataURI = _datauRI;
         maxSupply = _maxSupply;
+        setApprovalForAll(marketaddress, true);
     }
 
-    function payToMint(address marketaddress) public payable {
+    function payToMint() public payable {
         require(supply <= maxSupply, "Sorry, all NFTs have been minted!");
         require(msg.value > 0 ether, "Ether too low for minting!");
         //require(msg.sender != owner(), "This is not permitted!");
 
         supply += 1;
 
-        //sendMoneyTo(owner(), msg.value);
-/*
-        minted.push(
-            SaleStruct(
-                supply,
-                msg.sender,
-                owner(),
-                msg.value,
-                name(),
-                block.timestamp
-            )
-        );
-*/
         _safeMint(msg.sender, supply);
-        approve(marketaddress, supply);
-        emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply),block.timestamp);
+        emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply),block.timestamp, 0, 1);
         //emit Sale(supply, msg.sender, owner(), msg.value, tokenURI(supply),block.timestamp);
     }
 
-    //maxSupply 만큼 토큰 민팅
-    
-    //function mintAll() public payable
-    //{
-    //    for(uint i = supply; i < maxSupply; i++)
-    //    {
-    //        /*payToMint();*/
-    //    }
-    //}
+    function makeListing(uint8 tokenid, uint256 cost, address market) external
+    {
+        require(ownerOf(tokenid) == msg.sender, "Sender is not permitted");
+        approve(market, tokenid);
+        listing[tokenid] = cost;
+        emit Sale(tokenid, msg.sender, address(0), cost, tokenURI(tokenid),block.timestamp, 1, 1);
+        //emit Listed(tokenid, msg.sender, cost);
+    }
 
-    //function getAllNFTs() public view returns (SaleStruct[] memory) {
-    //    return minted;
-    //}
-    
-    //function getAnNFTs(uint256 tokenId) public view returns (SaleStruct memory) {
-    //    return minted[tokenId - 1];
-    //}
+    function makeOffer(uint256 cost, uint8 amount, address payable marketaddress) external payable
+    {
+        offers[msg.sender] = Offer(cost, amount);
+        sendMoneyTo(marketaddress, (cost + 500000) * amount );
+        emit Sale(0, address(0), msg.sender, cost, "",block.timestamp, 2, amount);
+    }
+
+    function acceptListing(uint8 tokenid, address payable marketaddress) external payable
+    {
+        uint256 cost = listing[tokenid];
+        require(msg.value > cost, "Value is lower than cost.");
+        address preowner = ownerOf(tokenid);
+        //safeTransferFrom(preowner, msg.sender, tokenid);
+        sendMoneyTo(marketaddress, cost + 500000);
+        delete listing[tokenid];
+        //emit Sale(tokenid, preowner, msg.sender, cost, tokenURI(tokenid), block.timestamp, 13);
+        emit ListAccepted(tokenid, preowner, msg.sender, cost);
+    }
+
+    function acceptOffer(uint8 tokenid, address to, address market) external
+    {
+        require(msg.sender == ownerOf(tokenid), "Sender is not owner.");
+        approve(market, tokenid);
+        Offer memory offer = offers[to];
+        //safeTransferFrom(preowner, msg.sender, tokenid);
+        offers[to].amount -= 1;
+        if(offers[to].amount == 0)
+        {
+            delete offers[to];
+        }
+        //emit Sale(tokenid, preowner, msg.sender, cost, tokenURI(tokenid), block.timestamp, 13);
+        emit OfferAccepted(tokenid, msg.sender, to, offer.cost);
+    }
+
+    function processListing(uint8 tokenid, address payable to, uint256 cost) external payable
+    {
+        address preowner = ownerOf(tokenid);
+        safeTransferFrom(preowner, to, tokenid);
+        sendMoneyTo(to, cost);
+        emit Sale(tokenid, preowner, to, cost, tokenURI(tokenid), block.timestamp, 13, 1);
+    }
+
+    function processOffer(uint8 tokenid, address to, uint256 cost) external payable
+    {
+        address payable preowner = payable(ownerOf(tokenid));
+        safeTransferFrom(preowner, to, tokenid);
+        sendMoneyTo(preowner, cost);
+        emit Sale(tokenid, preowner, to, cost, tokenURI(tokenid), block.timestamp, 23, 1);
+    }
+
+    function TransferNft(uint8 tokenid, address to) external
+    {
+        address preowner = ownerOf(tokenid);
+        safeTransferFrom(preowner, to, tokenid);
+        emit Sale(tokenid, preowner, to, 0, tokenURI(tokenid), block.timestamp, 4, 1);
+    }
 
     function concat(string memory str) internal view returns (string memory) {
         return string(abi.encodePacked(baseURI, "", str));

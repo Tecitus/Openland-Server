@@ -1,22 +1,9 @@
-import {nanoid} from 'nanoid';
-import {User} from '../user/user';
-import {runSql} from "../common/db/database";
+
 import {db} from "../db/knex"
 import {Asset, Activity} from "./asset"
 import {AssetToken} from "./assettoken"
-const LIMIT_MINUTE = 5;
 
 export class AssetRepository {
-    /*
-    public async getAssetInfo(id: number): Promise<string> {
-        try {
-            const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
-            const result: any = await runSql(query, id);
-            return await Promise.resolve(result);
-        } catch (err) {
-            return Promise.reject(new Error(err));
-        }
-    }*/
     public async createAsset(asset:Asset): Promise<Asset>
     {
       try{
@@ -28,6 +15,11 @@ export class AssetRepository {
         console.log(err)
         return null;
       }
+    }
+
+    public async getAllAssets(): Promise<Asset[]>
+    {
+      return await db.db('Assets').select('*');
     }
   
     //DB 상의 id에 해당하는 에셋 데이터 반환
@@ -236,7 +228,7 @@ export class AssetRepository {
       return await db.db("Activities").select('*').where({assetid:assetid, tokenindex:tokenindex}).orderBy("timestamp","desc").first();
     }
 
-    public async findActivityData(obj:any, limit = 20, offset = 1) : Promise<Activity[]>
+    public async findActivityData(obj:any, limit = 20, offset = 0) : Promise<Activity[]>
     {
       try{
         if(Object.keys(obj).length == 0)
@@ -275,7 +267,7 @@ export class AssetRepository {
 
     public async getCollectedAssets(userid:number)
     {
-      const result = await db.db("AssetTokens").select(["Assets.id", "AssetTokens.index"]).where({ownerid:userid}).leftJoin("Assets","AssetTokens.assetid","=","Assets.id").distinct("Assets.id");
+      const result = await db.db("AssetTokens").select(["Assets.id", "AssetTokens.index"]).where({ownerid:userid}).innerJoin("Assets","AssetTokens.assetid","=","Assets.id").distinct("Assets.id");
       return result;
     }
 

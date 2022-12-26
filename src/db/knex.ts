@@ -19,8 +19,11 @@ export class Database
                 password: dbConfig.password,
             }
         });
+    }
 
-        wrapper(this.db); //테이블 선언
+    public async CreateTables()
+    {
+        await wrapper(this.db);
     }
 }
 

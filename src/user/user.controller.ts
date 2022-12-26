@@ -1,11 +1,8 @@
 ﻿import {NextFunction, Request, RequestHandler, Response} from 'express';
 import {userService, UserService} from './user.service';
 import {User} from './user';
-import {isPresent, necessary, resultAppend} from '../common/util';
-import {email} from '../common/email/email';
-import {socialService, SocialService} from './social.service';
+import {resultAppend} from '../common/util';
 import {metamaskService, MetamaskService} from '../metamask/metamask.service'
-import {commonService} from '../common/common.service';
 import * as querystring from 'querystring';
 import {appConfig} from '../app-config';
 import {json} from "../common/controller";
@@ -17,7 +14,6 @@ import { web3, web3Service } from '../solidity/Web3Service';
 export class UserController {
     constructor(
         private userService: UserService,
-        private socialService: SocialService,
         private metamaskService : MetamaskService
     ) {
     }
@@ -201,4 +197,4 @@ export class UserController {
     }
 }
 
-export const user = new UserController(userService, socialService, metamaskService);
+export const user = new UserController(userService,metamaskService);

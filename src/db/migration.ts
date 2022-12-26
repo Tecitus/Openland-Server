@@ -2,11 +2,13 @@ import {assetService} from "../asset/asset.service"
 import {userService} from "../user/user.service"
 import {collectionService} from "../collection/collection.service"
 import {metamaskService} from "../metamask/metamask.service"
+import { web3Service, web3 } from "../solidity/Web3Service"
 import {fileStorageService} from "../common/filestorage.service"
+import { appConfig } from "../app-config"
 import fs from "fs";
 
 export async function wrapper(){
-    const datas = JSON.parse(fs.readFileSync("exampledata/dataset.json",'utf8'))
+    const datas = JSON.parse(fs.readFileSync("exampledata/"+appConfig.getConfig.db.migrationdata,'utf8'))
     let colidx = 0;
     let asidx = 0;
     for(let i = 0; i < datas.users.length; i++) {
@@ -19,10 +21,13 @@ export async function wrapper(){
             nickname:datas.users[i].nickname,
             picture:profileimg
         });
+        let count = 0;
+        const nonce = await web3.eth.getTransactionCount(datas.users[i].account);
+        //await web3.eth.personal.unlockAccount(datas.users[i].account, datas.users[i].privatekey, 600);
 
         const metamask = await metamaskService.createMetamaskData(datas.users[i].account, user.id);
 
-        for(let j = 0; j < 3; j++, colidx++)
+        for(let j = 0; j < appConfig.getConfig.db.collectionnum; j++, colidx++)
         {
             const logoimg = fileStorageService.writeFile(fs.readFileSync("exampledata/images/"+datas.collections[colidx].logoimg),'png');
             const featuredimg = fileStorageService.writeFile(fs.readFileSync("exampledata/images/"+datas.collections[colidx].featuredimg),'png');
@@ -36,7 +41,7 @@ export async function wrapper(){
                 creator: user.id
             });
 
-            for(let k = 0; k < 10; k++, asidx++)
+            for(let k = 0; k < appConfig.getConfig.db.assetnum; k++, asidx++)
             {
                 const image = fs.readFileSync("exampledata/images/"+datas.assets[asidx].file);
                 const asset = await assetService.createNewAsset({
@@ -48,7 +53,8 @@ export async function wrapper(){
                     creater: user.id,
                     tokennumber: 1,
                     creatoraddress: datas.users[i].account
-                })
+                }, datas.users[i].privatekey, nonce + count);
+                count++;
             }
         }
     }

@@ -14,39 +14,6 @@ export class CollectionService {
     constructor(private collectionRepository: CollectionRepository,) {
     }
 
-    /*
-    public async getCollectionId(name: string): Promise<string> {
-        try {
-            return await this.collectionRepository.getCollectionId(name);
-        } catch (err) {
-            return await Promise.reject(err.message);
-        }
-    }
-
-    public async getCollectionInfo(id: Number): Promise<string> {
-        try {
-            return await this.collectionRepository.getCollectionInfo(id);
-        } catch (err) {
-            return await Promise.reject(err.message);
-        }
-    }
-
-    public async checkUsrEditAuth(userId: string, collectionId: string): Promise<boolean> {
-        try {
-            return await this.collectionRepository.checkUsrEditAuth(userId, collectionId);
-        } catch (err) {
-            return await Promise.reject(err.message);
-        }
-    }
-
-    public async changeCollectionInfo(name: string, data: any): Promise<boolean> {
-        try {
-            return await this.collectionRepository.checkUsrEditAuth(userId, collectionId);
-        } catch (err) {
-            return await Promise.reject(err.message);
-        }
-    }*/
-
     public async getCollectionInfo(id:number): Promise<Collection> {
         try {
             return await this.collectionRepository.getCollectionData(id);

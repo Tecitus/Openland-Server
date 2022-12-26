@@ -1,8 +1,6 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
-import {isPresent, necessary, resultAppend} from '../common/util';
-import {email} from '../common/email/email';
+import {resultAppend} from '../common/util';
 import {metamaskService, MetamaskService} from './metamask.service';
-import {commonService} from '../common/common.service';
 import * as querystring from 'querystring';
 import {appConfig} from '../app-config';
 import {Metamask} from "./metamask";

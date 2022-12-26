@@ -1,3 +1,5 @@
 /node_modules
 /storage
 /src/config
+/bak
+node_exception_error.log

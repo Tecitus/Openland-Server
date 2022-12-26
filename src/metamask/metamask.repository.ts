@@ -1,8 +1,6 @@
-import {runSql, runTransSql} from '../common/db/database';
-import {isPresent} from '../common/util';
+
 import {Metamask} from './metamask';
 import {userService} from "../user/user.service";
-import {socialService} from "../user/social.service";
 import {UserController} from "../user/user.controller";
 import {Runtime} from "inspector";
 import {db} from "../db/knex"

@@ -4,7 +4,6 @@ import { fileStorageService } from "../common/filestorage.service";
 import {json} from "../common/controller";
 import {resultAppend} from "../common/util";
 import {Request, Response,Express} from "express";
-import { random } from "lodash";
 import { metamaskService } from "../metamask/metamask.service";
 export class AssetController
 {
@@ -55,7 +54,45 @@ export class AssetController
                     Number(req.body.collectionid),
                     req.body.creatoraddress
                     )
-                const asset = await assetService.createNewAsset(aco);
+                const asset = await assetService.createNewAsset(aco,null);
+                res.send("Success");
+            }
+            catch(err)
+            {
+                console.log(err);
+                json(res, resultAppend({}, false, `${err.message}`), 400);
+            }
+        }
+    }
+
+    public createAsset()
+    {
+        return async (req: Request, res: Response) =>
+        {
+            try
+            {
+                const contractaddress = req.body.contractaddress;
+                const hash = req.body.hash;
+                const name = req.body.name;
+                const description = req.body.description;
+                const supply = Number(req.body.supply);
+                const collectionid = Number(req.body.collectionid);
+                const creatoraddress = req.body.creatoraddress;
+                const symbol = req.body.symbol;
+                //@ts-ignore
+                const creator = req.session.user.id;
+                console.log(req.body);
+                const asset = await assetService.createAsset({
+                    name: name,
+                    symbol: symbol,
+                    description: description,
+                    tokennumber: supply,
+                    collectionid: collectionid,
+                    creatoraddress: creatoraddress,
+                    hash: hash,
+                    address: contractaddress,
+                    creator: creator
+                });
                 res.send("Success");
             }
             catch(err)
@@ -69,25 +106,7 @@ export class AssetController
     public getRandomAssetDatas()
     {
         return async (req: Request,res:Response)=>{
-            //const counts = await assetService.countAssets();
             const amount = Number(req.params.amount)
-            /*
-            if(amount > counts)
-            {
-                res.send(await assetService.searchAssets({}));
-            }
-            else
-            {
-                let targets : Array<number> = [];
-                while(targets.length < counts)
-                {
-                    let candidate = random(1,counts, false);
-                    if(!targets.includes(candidate))
-                        targets.push(candidate);
-                }
-
-                res.send(await assetService.searchAssets({id: targets}));
-            }*/
             res.send(await assetService.getRandomAssetDatas(amount));
         }
     }
@@ -133,7 +152,6 @@ export class AssetController
             const tokenindexes = req.body.tokenindexes;
             const from = req.body.from;
             const cost = Number(req.body.cost);
-            //const duration = Number(req.query.duration);
             const obj :any = {}
             obj.assetid = assetid;
             obj.type = type;
@@ -149,7 +167,6 @@ export class AssetController
                 console.log(obj);
                 await assetService.createActivity(obj)
             }
-            //duration ? obj.duration = duration : undefined;
             res.send("Success");
         }
     }
@@ -162,7 +179,6 @@ export class AssetController
             const to = req.body.to;
             const cost = Number(req.body.cost);
             const amount = Number(req.body.amount);
-            //const duration = Number(req.query.duration);
             const obj :any = {}
             obj.assetid = assetid;
             obj.type = type;
@@ -174,7 +190,6 @@ export class AssetController
             {
                 await assetService.createActivity(obj);
             }
-            //duration ? obj.duration = duration : undefined;
             res.send("Success");
         }
     }
@@ -199,8 +214,8 @@ export class AssetController
         {
             const assetid = Number(req.query.assetid);
             const offset = Number(req.query.offset as string);
-            const activity = await assetService.getActivity(assetid);
-            res.send(await assetService.getListActivities(activity.id, offset));
+
+            res.send(await assetService.getListActivities(assetid, offset));
         }
     }
 
@@ -210,9 +225,8 @@ export class AssetController
         {
             const assetid = Number(req.query.assetid);
             const offset = Number(req.query.offset as string);
-            const activity = await assetService.getActivity(assetid);
 
-            res.send(await assetService.getOfferActivities(activity.id, offset));
+            res.send(await assetService.getOfferActivities(assetid, offset));
         }
     }
 
@@ -235,7 +249,6 @@ export class AssetController
     {
         return async (req:Request, res:Response) =>
         {
-            //const limit = Number(req.query.limit);
             const offset = Number(req.query.offset);
             const type = Number(req.query.type);
             res.send(await assetService.getActivities(undefined, offset, type));

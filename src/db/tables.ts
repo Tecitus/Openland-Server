@@ -19,7 +19,6 @@ export const wrapper =async (db : Knex) =>
         table.string('salt', 64);
         table.string('nickname');
         table.string('username').unique();
-        //table.string('phone');
         table.string('picture');
         table.dateTime('createdat').defaultTo(db.fn.now());
     })
@@ -31,7 +30,6 @@ export const wrapper =async (db : Knex) =>
         table.string('featuredimg');
         table.string('name',255).unique();
         table.text('description');
-        //table.string('symbol', 4);
         table.bigInteger('creator').unsigned();
         table.foreign('creator').references('Users.id');
         table.dateTime('createdat').defaultTo(db.fn.now());
@@ -46,7 +44,6 @@ export const wrapper =async (db : Knex) =>
         table.string('ipfshash');
         table.string('address').unique();
         table.unique(['name', 'symbol']);
-        //table.primary(['name', 'symbol']);
         table.bigInteger('creator').unsigned();
         table.foreign('creator').references('Users.id');
         table.bigInteger('collectionid').unsigned();
@@ -61,7 +58,7 @@ export const wrapper =async (db : Knex) =>
         table.foreign('ownerid').references('Users.id');
         table.bigInteger('assetid').unsigned();
         table.foreign('assetid').references('Assets.id');
-        table.unique(['index','assetid']);
+        table.unique(['index','assetid']).primary();
     })
 
     await createTableIfNotExists('Metamasks', (table:any) => {
@@ -80,12 +77,11 @@ export const wrapper =async (db : Knex) =>
         table.string('to');
         table.double('cost').unsigned();
         table.dateTime('timestamp').defaultTo(db.fn.now());
-        table.dateTime('due');
+        //table.dateTime('due');
         table.boolean('done').defaultTo(false);
     });
 
     await createTableIfNotExists('Watches', (table:any)=>{
-        //table.bigIncrements('id').unique().primary();
         table.bigInteger('userid').unsigned();
         table.foreign('userid').references('Users.id');
         table.bigInteger('collectionid').unsigned();
@@ -95,7 +91,6 @@ export const wrapper =async (db : Knex) =>
     });
 
     await createTableIfNotExists('Favorites', (table:any)=>{
-        //table.bigIncrements('id').unique().primary();
         table.bigInteger('userid').unsigned();
         table.foreign('userid').references('Users.id');
         table.bigInteger('assetid').unsigned();
@@ -103,14 +98,4 @@ export const wrapper =async (db : Knex) =>
         table.unique(['userid','assetid']);
         table.primary(['userid','assetid'])
     });
-    /*
-    await db.schema.createTable('Bids', (table)=>{
-        table.bigIncrements('id').unique().primary();
-        table.bigInteger('tokenindex').unsigned();
-        table.bigInteger('assetid').unsigned();
-        table.foreign('assetid').references('Assets.id');
-        table.string('from');
-        table.double('cost').unsigned();
-        table.dateTime('due');
-    });*/
 }

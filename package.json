@@ -1,10 +1,10 @@
 {
   "name": "capstone-backend",
-  "version": "0.0.1",
+  "version": "0.1",
   "description": "Server",
   "license": "MIT",
   "main": "src/server.ts",
-  "author": "soconquer1@gmail.com",
+  "author": "jwj3123@gmail.com",
   "scripts": {
     "start": "npm run lint && nodemon ./src/server.ts --config nodemon.json && set DEBUG=express:* ",
     "local": "rmdir /s /q dist && tsc && mkdir dist\\config && copy src\\config dist\\config",

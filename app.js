@@ -6,8 +6,6 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./users');
-// var metamaskRouter = require('./src/metamask/metamask');
-// var nftRouter = require('./'); //TODO : 왜 getter 여기 해야만 뜨지 + 위치 여기 맞는지 확인
 
 
 var app = express();

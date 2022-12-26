@@ -5,7 +5,7 @@ import {User} from '../user/user';
 import {collectionService, CollectionService} from './collection.service';
 import {Request, Response} from "express";
 import {json} from "../common/controller";
-import {necessary, resultAppend} from "../common/util";
+import {resultAppend} from "../common/util";
 import {userService} from "../user/user.service";
 import {PoolConnection} from "mysql2";
 import {threadId} from "worker_threads";

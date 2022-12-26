@@ -1,20 +1,12 @@
-import {Request, Response} from 'express';
-import * as jwt from 'jsonwebtoken';
-import {TokenExpiredError} from 'jsonwebtoken';
+
 import {User} from './user';
 import {appConfig} from '../app-config';
-import {decrypt, encrypt, isPresent, sha3Hash} from '../common/util';
+import {sha3Hash} from '../common/util';
 import {UserRepository} from './user.repository';
 import {assetRepository} from '../asset/asset.repository'
 import {assetService} from '../asset/asset.service'
-//import {Teacher} from '../course/teacher';
-import {email} from '../common/email/email';
-//import {kakaoTalk} from '../common/kakao/kakaoTalk';
-import {commonService} from '../common/common.service';
-import {PoolConnection} from 'mysql2/promise';
-import * as bcrypt from 'bcrypt';
+
 import {nanoid} from 'nanoid/non-secure';
-import {CookieOptions} from 'express-serve-static-core';
 
 export class UserService {
     constructor(private userRepository: UserRepository) {

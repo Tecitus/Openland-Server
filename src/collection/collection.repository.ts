@@ -2,43 +2,12 @@
 //TODO : collection
 import {nanoid} from 'nanoid';
 import {User} from '../user/user';
-import {runSql} from "../common/db/database";
 import {db} from "../db/knex"
 import { Collection, Watch } from './collection';
 
 const LIMIT_MINUTE = 5;
 
 export class CollectionRepository {
-    /*
-    public async getCollectionId(name: string): Promise<string> {
-        try {
-            const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
-            const result: any = await runSql(query, name);
-            return await Promise.resolve(result);
-        } catch (err) {
-            return Promise.reject(new Error(err));
-        }
-    }
-
-    public async getCollectionInfo(name: Number): Promise<string> {
-        try {
-            const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
-            const result: any = await runSql(query, name);
-            return await Promise.resolve(result);
-        } catch (err) {
-            return Promise.reject(new Error(err));
-        }
-    }
-
-    public async checkUsrEditAuth(userId: string, collectionId: string): Promise<boolean> {
-        try {
-            const query = 'SELECT keyword as courseKeyword, level FROM teacher WHERE user_id = ? AND level <> 9;';
-            const result: any = await runSql(query, [userId, collectionId]);
-            return await Promise.resolve(result);
-        } catch (err) {
-            return Promise.reject(new Error(err));
-        }
-    }*/
     public async getCollectionData(collectionid:number): Promise<Collection>
     {
         try
@@ -143,12 +112,14 @@ export class CollectionRepository {
 
     public async countVolumes(collectionid:number)
     {
-        return Number((await db.db.from("Collections").where("Collections.id", collectionid).select('*').innerJoin("Assets","Assets.collectionid","Collections.id").innerJoin("Activities","Activities.assetid", "Assets.id").where("Activities.type",3).count('Activities.id as CNT').first()).CNT);
+        return Number((await db.db.from("Collections").select('*').innerJoin("Assets","Assets.collectionid","Collections.id").innerJoin("Activities","Activities.assetid", "Assets.id").where("Activities.type",3).where("Collections.id", collectionid).count('Activities.id as CNT').first()).CNT);
     }
 
     public async countOwners(collectionid:number)
     {
-        return Number((await db.db.from("Collections").where("Collections.id", collectionid).select('*').innerJoin("Assets","Assets.collectionid","Collections.id").innerJoin("AssetTokens","AssetTokens.assetid", "Assets.id").innerJoin("Users","Users.id", "AssetTokens.ownerid").distinct("Users.id").count('Users.id as CNT').first()).CNT);
+        //return Number((await db.db.from("Collections").select('*').innerJoin("Assets","Assets.collectionid","Collections.id").innerJoin("AssetTokens","AssetTokens.assetid", "Assets.id").innerJoin("Users","Users.id", "AssetTokens.ownerid").where("Collections.id", collectionid).distinct("Users.id").count('Users.id as CNT').first()).CNT);
+        const result = await db.db.raw("SELECT COUNT(DISTINCT Users.id) FROM Collections JOIN Assets ON Assets.collectionid = Collections.id JOIN AssetTokens ON AssetTokens.assetid = Assets.id JOIN Users ON Users.id = AssetTokens.ownerid WHERE Collections.id = "+collectionid)
+        return result[0][0]["COUNT(DISTINCT Users.id)"];
     }
 
     public async getRandomCollections(amount:number, offset = 0) : Promise<Collection[]>

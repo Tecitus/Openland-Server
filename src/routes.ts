@@ -1,29 +1,18 @@
 import * as express from 'express';
 import { user } from './user/user.controller';
-import { InstaController } from './insta/insta.controller';
 import { collectionController } from './collection/collection.controller';
-import { InstaService } from './insta/insta.service'
-import { nftController } from './nft/nft.controller'
 import { metamask } from './metamask/metamask.controller'
 import { fileStorageService } from './common/filestorage.service';
 import {fileStorageController} from './common/filestorage.controller'
 import { ipfsController } from './common/ipfs.controller';
 import { assetController} from './asset/asset.controller';
 import bodyParser from 'body-parser';
+import { solidityController } from './solidity/solidity.controller';
 let jsonparser = bodyParser.json();
 
 
 export function routes(app: express.Application) {
   const router: express.Router = express.Router();
-  /*
-  const bothLoginOrNot = user.authCheck();
-  const protect = user.authGuard();
-  const teacherProtect = [user.authGuard(), user.getLevel()];
-  // const keywordProtect = [user.checkKeyword()];
-  const OnlyMasterProtect = [user.authGuard(), user.getLevel(), user.checkMaster()];
-  const versionProtect = [user.checkVersion()];
-  const insta = new InstaController(new InstaService());
-  */
 
   router.post('/users/register', fileStorageService.uploader.single('attachment'),user.registerUser());
   router.post('/users/signin',user.signIn());
@@ -46,7 +35,8 @@ export function routes(app: express.Application) {
   router.get('/metamasks/metamask/:address', metamask.getMetamaskData());
   router.post('/metamasks/signature', metamask.joinOrLogin());
 
-  router.post('/assets/createasset', fileStorageService.uploader.single('image'), assetController.createNewAsset())
+  //router.post('/assets/createasset', fileStorageService.uploader.single('image'), assetController.createAsset())
+  router.post('/assets/createasset', assetController.createAsset())
   router.get('/assets/asset/:id', assetController.getAssetData());
   router.get('/assets/getrandomassets/:amount', assetController.getRandomAssetDatas());
   router.get('/assets/assetoken/:assetid/:index', assetController.getAssetToken());
@@ -58,7 +48,10 @@ export function routes(app: express.Application) {
   router.get('/assets/findassets', assetController.findAssets());
 
   router.get('/ipfs/:hash', ipfsController.getIFPSFile());
+  router.post('/ipfs/uploadfile', fileStorageService.uploader.single('attachment'),ipfsController.uploadFile());
   router.get('/files/:file', fileStorageController.getFile());
+
+  router.get('/solidity/getbytecode', solidityController.getByteCode());
 
   router.get("/activities/getactivitiesfromasset", assetController.getActivitiesFromAsset());
   router.get("/activities/getactivities", assetController.getActivities());
