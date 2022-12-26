@@ -1,4 +1,5 @@
 import * as express from 'express';
+import fs from 'fs';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as hpp from 'hpp';
@@ -16,6 +17,7 @@ import {redis} from './common/db/redis';
 import { createClient } from 'redis';
 import { wrapper } from './db/migration';
 import ws from 'ws';
+import path from 'path';
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session)
 
@@ -25,6 +27,8 @@ export class Server {
 
     constructor() {
         //appConfig.config(process.env.NODE_ENV || 'development');
+        if(!fs.existsSync(path.join(__dirname,"..", "storage")))
+            fs.mkdirSync(path.join(__dirname,"..", "storage"));
         this.middleware();
         this.dbConnect();
         this.redisConnect();

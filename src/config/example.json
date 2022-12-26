@@ -1,0 +1,36 @@
+{
+    "db":{
+        "host": "localhost",
+        "user": "",
+        "password": "",
+        "database": "",
+        "port": "3306",
+        "migration":false,
+        "migrationdata":"dataset.json",
+        "assetnum":5,
+        "collectionnum":2
+    },
+    "redis":{
+        "host": "localhost",
+        "port": "6379",
+        "secret": "",
+        "database": ""
+    },
+    "web3":{
+        "url": "",
+        "address":"",
+        "privatekey":"",
+        "gaslimit":6721975
+    },
+    "ipfs": {
+        "endpoint":"",
+        "projectid":"",
+        "projectsecret":""
+    },
+    "server":
+    {
+        "cors":[
+
+        ]
+    }
+}
